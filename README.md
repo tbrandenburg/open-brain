@@ -14,6 +14,7 @@ This is a starting point — the memory files, heartbeat checklist, and personal
 | `memory/USER.md` | Your profile — projects, preferences, integrations |
 | `memory/MEMORY.md` | Long-term memory (decisions, lessons, facts) |
 | `memory/HEARTBEAT.md` | Checklist for scheduled heartbeat runs |
+| `memory/tone-of-voice.md` | Detailed writing style guide referenced by SOUL.md |
 | `memory/HABITS.md` | Optional habit tracker |
 | `memory/BOOTSTRAP.md` | One-time onboarding — deleted after first setup |
 | `memory/daily/` | Daily session and heartbeat logs |
@@ -39,14 +40,9 @@ Edit `memory/USER.md` — add your name, timezone, role, and which integrations 
 
 **opencode** — `opencode.jsonc` is already set up. Run `opencode` in this directory and context loads automatically.
 
-**Claude Code** — add to `.claude/settings.json`:
-```json
-{ "instructions": ["memory/SOUL.md", "memory/USER.md", "memory/MEMORY.md"] }
-```
+**Claude Code** — a `CLAUDE.md` is already included. It imports `AGENTS.md` and the memory files so Claude Code gets the same context as opencode. Run `claude` in this directory and it loads automatically.
 
-Or create a `CLAUDE.md` that includes the memory files manually.
-
-**Other CLIs** — consult your CLI's documentation for how to load instruction files at session start. Point it at `memory/SOUL.md`, `memory/USER.md`, and `memory/MEMORY.md`.
+**Other CLIs** — consult your CLI's documentation for how to load instruction files at session start. Most support either a config-based `instructions` array or a markdown file with `@path` imports.
 
 ### 4. Run onboarding
 
@@ -92,6 +88,8 @@ Then schedule `vault/git-sync` to run every 2 minutes. See `AGENTS.md → Vault 
 
 ## How Context Loading Works
 
+### opencode
+
 `opencode.jsonc` uses the `instructions` field to inject memory files into every session:
 
 ```jsonc
@@ -99,12 +97,31 @@ Then schedule `vault/git-sync` to run every 2 minutes. See `AGENTS.md → Vault 
   "instructions": [
     "memory/SOUL.md",
     "memory/USER.md",
-    "memory/MEMORY.md"
+    "memory/MEMORY.md",
+    "memory/tone-of-voice.md"
   ]
 }
 ```
 
 This is the opencode-native equivalent of a `SessionStart` hook — no scripts needed.
+
+### Claude Code
+
+Claude Code reads `CLAUDE.md` at session start. The included `CLAUDE.md` imports `AGENTS.md` and all memory files:
+
+```markdown
+@AGENTS.md
+@memory/SOUL.md
+@memory/USER.md
+@memory/MEMORY.md
+@memory/tone-of-voice.md
+```
+
+`AGENTS.md` is the source of truth — `CLAUDE.md` just wires it into Claude Code via `@path` imports.
+
+### Other CLIs
+
+Consult your CLI's documentation for instruction file support. Most support either a config-based `instructions` array (like opencode) or a markdown file loaded at startup (like Claude Code's `CLAUDE.md`). Point it at the four memory files above.
 
 **Daily logs** (`memory/daily/YYYY-MM-DD.md`) are not auto-loaded because the date is dynamic. Convention: on the first turn of each session, ask the agent to read today's log if it exists.
 
@@ -114,7 +131,7 @@ This is the opencode-native equivalent of a `SessionStart` hook — no scripts n
 
 - **`memory/SOUL.md`** — Change the AI's personality, communication style, proactivity rules
 - **`memory/HEARTBEAT.md`** — Add/remove checks, adjust notification thresholds, configure integrations
-- **`tone-of-voice.md`** — Detailed writing style guide referenced by SOUL.md
+- **`memory/tone-of-voice.md`** — Detailed writing style guide referenced by SOUL.md
 - **`memory/HABITS.md`** — Set up recurring habits you want tracked
 
 ---
