@@ -40,9 +40,11 @@ Edit `memory/USER.md` — add your name, timezone, role, and which integrations 
 
 **opencode** — `opencode.jsonc` is already set up. Run `opencode` in this directory and context loads automatically.
 
-**Claude Code** — a `CLAUDE.md` is already included. It imports `AGENTS.md` and the memory files so Claude Code gets the same context as opencode. Run `claude` in this directory and it loads automatically.
+**Claude Code** — a `CLAUDE.md` is already included. It imports `AGENTS.md` and the memory files via `@path` syntax so Claude Code gets the full context. Run `claude` in this directory and it loads automatically.
 
-**Other CLIs** — consult your CLI's documentation for how to load instruction files at session start. Most support either a config-based `instructions` array or a markdown file with `@path` imports.
+**VS Code Copilot** — no setup needed. VS Code natively reads `AGENTS.md` as always-on instructions. The memory files (`SOUL.md`, `USER.md`, etc.) are not auto-loaded; reference them manually in chat with `#file:memory/SOUL.md` when needed.
+
+**Other CLIs** — consult your CLI's documentation for how to load instruction files at session start. Most support either a config-based `instructions` array or a startup markdown file.
 
 ### 4. Run onboarding
 
@@ -107,7 +109,7 @@ This is the opencode-native equivalent of a `SessionStart` hook — no scripts n
 
 ### Claude Code
 
-Claude Code reads `CLAUDE.md` at session start. The included `CLAUDE.md` imports `AGENTS.md` and all memory files:
+Claude Code does not read `AGENTS.md` natively. The included `CLAUDE.md` bridges this by importing `AGENTS.md` and all memory files via `@path` syntax, which Claude Code expands at session start:
 
 ```markdown
 @AGENTS.md
@@ -117,7 +119,11 @@ Claude Code reads `CLAUDE.md` at session start. The included `CLAUDE.md` imports
 @memory/tone-of-voice.md
 ```
 
-`AGENTS.md` is the source of truth — `CLAUDE.md` just wires it into Claude Code via `@path` imports.
+`AGENTS.md` is the source of truth — `CLAUDE.md` is only a bridge for Claude Code.
+
+### VS Code Copilot
+
+VS Code Copilot reads `AGENTS.md` natively as always-on instructions — no setup needed. It also reads `CLAUDE.md`, but does **not** expand `@path` imports, so `CLAUDE.md` has no effect in Copilot. The memory files (`SOUL.md`, `USER.md`, etc.) are not auto-loaded; add them to a chat request manually with `#file:memory/SOUL.md` when needed.
 
 ### Other CLIs
 
