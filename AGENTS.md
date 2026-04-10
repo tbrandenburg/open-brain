@@ -1,3 +1,11 @@
+## Session Start
+
+On the first turn of every session:
+1. Check if `memory/BOOTSTRAP.md` exists.
+2. If it does, read it and follow the steps in it before doing anything else.
+
+---
+
 ## Memory Files
 
 This project uses a `memory/` directory as persistent memory across sessions. Memory files
@@ -5,6 +13,7 @@ are auto-loaded into context via `.opencode/opencode.jsonc` — no manual readin
 
 | File | Contains | Update When |
 |------|----------|-------------|
+| `BOOTSTRAP.md` | First-run onboarding script — guides the agent through setup questions | Never (auto-deleted after onboarding completes) |
 | `SOUL.md` | AI personality, behavioral rules, communication style, boundaries | Changing how the assistant should behave |
 | `USER.md` | User profile, account IDs, integration config, preferences, team info | Learning something about the user or adding an integration account |
 | `MEMORY.md` | Key decisions, lessons learned, active projects, important facts | Making a significant decision or learning a reusable lesson |
@@ -32,6 +41,8 @@ This works with opencode out of the box. For other agent CLIs:
 
 Daily logs (`memory/daily/YYYY-MM-DD.md`) are not auto-loaded because the date is dynamic.
 Convention: on the first turn of each session, the agent reads today's log if it exists.
+
+`memory/BOOTSTRAP.md` is not auto-loaded — the agent checks for it on session start and reads it only if it exists. It deletes itself after onboarding completes, so it is silently absent on all subsequent sessions.
 
 ---
 
