@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // Memory files loaded as context at the start of every session.
+  // These are the equivalent of a SessionStart hook — no scripts needed.
+  // Add memory/daily/YYYY-MM-DD.md manually or ask the agent to read it on first turn.
+  "instructions": [
+    "memory/SOUL.md",
+    "memory/USER.md",
+    "memory/MEMORY.md"
+  ]
+}
